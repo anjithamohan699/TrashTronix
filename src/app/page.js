@@ -46,7 +46,6 @@ export default function Home() {
           >
             Register Complaint  &nbsp;
             <BsFillExclamationCircleFill/> {/* Adjusted margin for Register Complaint Icon */}
-            
           </button>
         </div>
       </div>

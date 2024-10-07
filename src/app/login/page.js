@@ -112,7 +112,7 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="email"
-              className="form-control w-full px-4 py-2 border border-gray-300 rounded-lg"
+              className="form-control w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
               name="email"
               placeholder="Email Address"
               value={email}

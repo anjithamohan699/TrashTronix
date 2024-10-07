@@ -38,8 +38,8 @@ export default function ForgotPassword() {
             {/* Replace SVG with FaLock Icon */}
             <IoIosLock color="white" size={36}/>
           </div>
-          <h2 className="text-xl font-semibold mb-4">Forgot Your Password?</h2>
-          <p className="text-gray-600 mb-6 text-center">
+          <h2 className="text-xl font-semibold mb-4 text-black">Forgot Your Password?</h2>
+          <p className="text-gray-600 mb-6 text-center text-black">
             No worries! Enter your email, and we will send you a reset password
             link.
           </p>
@@ -54,7 +54,7 @@ export default function ForgotPassword() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#393269]"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#393269] text-black"
               placeholder="email"
             />
           </div>

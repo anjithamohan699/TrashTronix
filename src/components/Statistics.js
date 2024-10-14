@@ -56,13 +56,13 @@ const Statistics = () => {
           </div>
 
         {/* Assigned Workers Card */}
-        <div className="w-full max-w-xs mx-auto p-4 border rounded shadow bg-white">
+        {/*<div className="w-full max-w-xs mx-auto p-4 border rounded shadow bg-white">
           <div className="card-header font-bold text-black font-Roboto">Assigned Workers</div>
           <div className="card-body">
           <h5 className="card-title text-2xl text-gray-700 mb-4">{data.assignedWorkers}</h5>
           <a href="#" className="btn text-white bg-blue-500 rounded p-2">View Workers</a>
           </div>
-        </div>
+        </div> */}
 
         {/* Active Robo Trashtrons Card */}
         <div className="w-full max-w-xs mx-auto p-4 border rounded shadow bg-white">

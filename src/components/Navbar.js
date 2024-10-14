@@ -100,15 +100,15 @@ const handleLogout = async () => {
       <div className="text-xl font-bold">Trashtronix Admin</div>
 
       {/* Icons on the Right */}
-      <div className="flex items-center">
+       <div className="flex items-center"> 
         {/* User Plus Icon */}
-        <button className="mx-3" onClick={toggleFormOpen}>
+        {/* <button className="mx-3" onClick={toggleFormOpen}>
           <UserPlusIcon className="h-8 w-8 text-white" />
-        </button>
+        </button>  */}
 
         {/* Account Icon */}
         <div className="relative">
-          <button onClick={toggleDropdownOpen}>
+        <button onClick={toggleDropdownOpen}>
             <UserCircleIcon className="h-8 w-8 text-white mt-2" />
           </button>
 
@@ -127,19 +127,19 @@ const handleLogout = async () => {
       </div>
 
       {/* Form Dropdown */}
-      {formOpen && (
+      {/* {formOpen && (
         <div className="absolute right-12 top-20 mt-2 w-72 bg-gray-300 rounded-lg shadow-lg p-8 z-20">
           <div className="flex justify-between items-center">
             <h2 className="text-lg  mb-2 font-semibold text-black text-center">Add User</h2>
             <button onClick={() => setFormOpen(false)}>
               <XMarkIcon className="h-6 w-6 text-black" />
             </button>
-          </div>
+          </div> */}
 
           {/* Error message */}
-          {error && <p className="text-red-600 text-center mb-2">{error}</p>}
+         {/* {error && <p className="text-red-600 text-center mb-2">{error}</p>} */}
 
-          <form className="space-y-3 mt-2" onSubmit={handleAddUser}>
+         {/* <form className="space-y-3 mt-2" onSubmit={handleAddUser}>
             <input
               type="text"
               placeholder="Name"
@@ -172,9 +172,9 @@ const handleLogout = async () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               className="w-full px-3 py-2 border border-gray-400 rounded-md text-black"
-            />
+            /> */}
             {/* Eye icon to toggle password visibility */}
-            <div
+          {/*  <div
                 className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500"
                 onClick={() => setShowPassword(!showPassword)}
               >
@@ -188,9 +188,9 @@ const handleLogout = async () => {
             >
               <option value="" disabled>Select Role</option>
               <option value="staff">Staff</option>
-              <option value="admin">Admin</option>
+              <option value="admin">Admin</option> */}
               {/* Add more roles if needed */}
-            </select>
+          {/*  </select>
 
             <button
               type="submit"
@@ -201,7 +201,7 @@ const handleLogout = async () => {
             </button>
           </form>
         </div>
-      )}
+      )} */}
     </nav>
   );
 }

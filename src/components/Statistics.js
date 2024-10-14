@@ -6,9 +6,9 @@ const data = {
   assignedWorkers: 15,
   activeTrashtrons: 8,
   recentActivities: [
-    { id: 1, activity: "Complaint #1023 Assigned to Worker John", date: "2024-04-15", status: "Pending" },
+    { id: 1, activity: "Complaint #1023 Assigned to Robo TrashTron #6", date: "2024-04-15", status: "Pending" },
     { id: 2, activity: "Robo Trashtron #5 Started Collection", date: "2024-04-14", status: "Active" },
-    { id: 3, activity: "Worker Emily Completed Task #45", date: "2024-04-13", status: "Completed" },
+    { id: 3, activity: "Robo TrashTron #3 Completed Task #45", date: "2024-04-13", status: "Completed" },
     // Add more activities as needed
   ],
 };

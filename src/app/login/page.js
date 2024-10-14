@@ -75,7 +75,7 @@ export default function Login() {
         } else if (role === 'staff') {
           router.push('/staff');
         } else {
-          router.push('/user');
+          router.push('/complaint');
         }
       } else {
         console.error('No such document!');

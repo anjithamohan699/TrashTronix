@@ -233,7 +233,7 @@ export default function Registration() {
               <textarea
                 className="w-11/12 ml-4 p-2 border rounded-lg mb-4 resize-none text-black"
                 placeholder="Description"
-                rows="4"
+                rows={4}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 onFocus={handleInputFocus} // Track focus on input

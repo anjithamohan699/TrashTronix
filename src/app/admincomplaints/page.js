@@ -201,7 +201,7 @@ export default function AdminComplaints() {
               ></textarea>
             )}
 
-            {/* Accept and Reject Buttons */}
+            {/* complaint Accept and Reject Buttons */}
             <div className="mt-4 flex justify-between">
               <button
                 onClick={() => handleAccept(complaints[currentIndex].id)}

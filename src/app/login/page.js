@@ -25,7 +25,7 @@ export default function Login() {
       console.log('Logged in user:', user.uid);
   
       // Fetch role from Firestore (assuming role is stored under a collection called 'admin')
-      const userDoc = await getDoc(doc(db, 'admin', user.uid));
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
       
       if (userDoc.exists()) {
         const role = userDoc.data().role;
@@ -44,9 +44,9 @@ export default function Login() {
         setError('User role not found');
       }
     } catch (error) {
-      console.error('Login Error:', error);  // This will log the detailed error
-      setError('Invalid email or password');
-    }
+      console.error('Login Error:', error.code, error.message);
+      setError(error.message);  // Display the actual error message
+    }    
   };  
 
   // Navigate to reset password page
@@ -63,7 +63,7 @@ export default function Login() {
       console.log('Google Sign-In Successful', user);
 
       // Fetch role from Firestore (assuming role is stored under a collection called 'admin')
-      const userDoc = await getDoc(doc(db, 'admin', user.uid));
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
       
       if (userDoc.exists()) {
         const role = userDoc.data().role;
@@ -75,7 +75,7 @@ export default function Login() {
         } else if (role === 'staff') {
           router.push('/staff');
         } else {
-          router.push('/user');
+          router.push('/complaint');
         }
       } else {
         console.error('No such document!');
@@ -112,7 +112,7 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <input
               type="email"
-              className="form-control w-full px-4 py-2 border border-gray-300 rounded-lg"
+              className="form-control w-full px-4 py-2 border border-gray-300 rounded-lg text-black"
               name="email"
               placeholder="Email Address"
               value={email}

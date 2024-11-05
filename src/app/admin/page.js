@@ -39,7 +39,7 @@ export default function AdminPage() {
     }
   };
 
-   // Add a logout function
+// Add a logout function
 const handleLogout = async () => {
   try {
     await signOut(auth);
@@ -70,11 +70,11 @@ const handleLogout = async () => {
           </div>
           <div className="p-4">
             <ul className="space-y-4">
-              <li>
+              {/* <li>
                 <button onClick={() => router.push('/admin')} className="text-white">
                   Dashboard
                 </button>
-              </li>
+              </li> */}
               <li>
                 <button onClick={() => router.push('/admincomplaints')} className="text-white">
                   Complaints

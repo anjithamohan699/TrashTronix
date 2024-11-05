@@ -4,6 +4,8 @@ import { Bars3Icon, UserCircleIcon, UserPlusIcon, XMarkIcon } from '@heroicons/r
 import { Transition } from '@headlessui/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { signOut } from 'firebase/auth'; // Import signOut method
+import { auth } from '@/lib/firebase';
 // Importing AdminComplaint component
 // Importing AdminComplaint component
 //import AdminComplaint from './AdminComplaint';
@@ -36,6 +38,17 @@ export default function AdminPage() {
         return "";
     }
   };
+
+   // Add a logout function
+const handleLogout = async () => {
+  try {
+    await signOut(auth);
+    alert('Logged out successfully!');
+    router.push('/login'); // Navigate to login page
+  } catch (error) {
+    console.error('Error logging out: ', error);
+  }
+};
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -91,20 +104,21 @@ export default function AdminPage() {
           </button>
           <div className="text-xl font-bold">Trashtronix Admin</div>
           <div className="flex items-center">
-            {/* <button className="mx-3" onClick={() => setFormOpen(!formOpen)}>
-              <UserPlusIcon className="h-8 w-8 text-white" />
-            </button> */}
             <div className="relative">
               <button onClick={() => setDropdownOpen(!dropdownOpen)}>
                 <UserCircleIcon className="h-8 w-8 text-white mt-2" />
               </button>
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-[#8DD8CC] rounded-lg shadow-lg py-2">
-                  <button onClick={() => console.log('Logging out...')} className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                    Logout
-                  </button>
-                </div>
-              )}
+              {/* Dropdown for Account */}
+          {dropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-[#8DD8CC] rounded-lg shadow-lg py-2">
+              <button
+      onClick={handleLogout}
+      className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+    >
+      Logout
+    </button>
+            </div>
+          )}
             </div>
           </div>
         </nav>

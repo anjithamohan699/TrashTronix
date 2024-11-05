@@ -1,4 +1,4 @@
-'use client';  // This line makes the component a Client Component
+'use client';  // This line makes the component a Client Components
 
 import { useState } from 'react';
 import { auth } from '../../lib/firebase'; // Import auth from your lib/firebase.js file

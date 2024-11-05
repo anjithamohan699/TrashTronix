@@ -1,6 +1,6 @@
 // SignupModal.js
 import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider, db } from '../../lib/firebase'; // Import your Firebase config
+import { auth, googleProvider, db } from '../../lib/firebase'; // Import your Firebase configuration
 import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export default function SignupModal({ isOpen, onClose }) {
@@ -14,7 +14,7 @@ export default function SignupModal({ isOpen, onClose }) {
       // Log user info to debug
       console.log("User Info: ", user);
 
-      // Reference to the user document in Firestore
+      // References to the user document in Firestore
       const userRef = doc(db, "users", user.uid);
 
       // Check if the user already exists in Firestore

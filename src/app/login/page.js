@@ -1,4 +1,5 @@
 // login/page.js
+
 'use client';
 import { useState } from 'react';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
@@ -34,9 +35,11 @@ export default function Login() {
         // Redirect based on role
         if (role === 'admin') {
           router.push('/admin');
-        } else if (role === 'staff') {
-          router.push('/staff');
-        } else {
+        } 
+        // else if (role === 'staff') {
+        //   router.push('/staff');
+        // } 
+        else {
           router.push('/user');
         }
       } else {

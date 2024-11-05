@@ -149,6 +149,7 @@ export default function Registration() {
     <div className="flex h-screen container mx-auto bg-gradient-to-r from-blue-900 to-blue-400 p-6">
       <div className="grid grid-cols-1 md:grid-cols-3">
         {/* Left Panel */}
+        
         <div className="mb=6 text-center text-white md:col-span-1 relative">
           <img
             src="/Rocket-190970.png"

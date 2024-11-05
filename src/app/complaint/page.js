@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from "react";
 import { db, auth, googleProvider } from '../../lib/firebase'; // Import your firebase configuration
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Import Firebase Storage
 import { storage } from '../../lib/firebase'; // Import Firebase storage from your configuration
 import { onAuthStateChanged, signOut } from "firebase/auth"; // Import sign out functionality
@@ -24,16 +24,23 @@ export default function Registration() {
   const [logoutSuccessMessage, setLogoutSuccessMessage] = useState(""); // State for logout success message
 
   useEffect(() => {
-    // Check for user authentication state
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        setTypingWithoutLogin(false); // Reset typing state when logged in
-        setShowLoginMessage(false); // Hide login message when logged in
-        setEmail(currentUser.email); // Automatically set email
+        const userDoc = await getDoc(doc(db, "users", currentUser.uid));
+        if (userDoc.exists() && userDoc.data().role === "user") {
+          setUser(currentUser); // Set user only if role is "user"
+          setEmail(currentUser.email);
+          setTypingWithoutLogin(false);
+          setShowLoginMessage(false);
+        } else {
+          // No message set here for unauthorized users
+          setUser(null); // Set user to null if role is not "user"
+        }
+      } else {
+        setUser(null);
       }
     });
-    return () => unsubscribe(); // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
 
   const getLocation = () => {
@@ -137,6 +144,7 @@ export default function Registration() {
   const handleLogout = async () => {
     await signOut(auth);
     setUser(null);
+    setEmail(""); // Reset the email field after logout
     setLogoutSuccessMessage("You have logged out successfully."); // Set the logout success message
 
     // Automatically hide the logout success message after 3 seconds

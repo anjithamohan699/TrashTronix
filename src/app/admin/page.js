@@ -91,9 +91,9 @@ export default function AdminPage() {
           </button>
           <div className="text-xl font-bold">Trashtronix Admin</div>
           <div className="flex items-center">
-            <button className="mx-3" onClick={() => setFormOpen(!formOpen)}>
+            {/* <button className="mx-3" onClick={() => setFormOpen(!formOpen)}>
               <UserPlusIcon className="h-8 w-8 text-white" />
-            </button>
+            </button> */}
             <div className="relative">
               <button onClick={() => setDropdownOpen(!dropdownOpen)}>
                 <UserCircleIcon className="h-8 w-8 text-white mt-2" />

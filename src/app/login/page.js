@@ -110,7 +110,7 @@ export default function Login() {
             <FcGoogle/> &nbsp; Sign In with Google
           </button>
 
-          <div className="text-center mt-4 mb-4 text-gray-400">- OR -</div>
+          <div className="text-center mt-4 mb-4 text-black-400">- OR -</div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <input

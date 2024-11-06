@@ -2,13 +2,12 @@
 "use client";
 import { Bars3Icon, UserCircleIcon, UserPlusIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import { Transition } from '@headlessui/react';
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth'; // Import signOut method
 import { auth } from '@/lib/firebase';
-// Importing AdminComplaint component
-// Importing AdminComplaint component
-//import AdminComplaint from './AdminComplaint';
+import { useState, useEffect } from 'react';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 export default function AdminPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -16,14 +15,12 @@ export default function AdminPage() {
   const [formOpen, setFormOpen] = useState(false);
   const router = useRouter();
 
+  const [complaints, setComplaints] = useState([]);
+  const [activeComplaintsCount, setActiveComplaintsCount] = useState(0);
+
   const data = {
-    activeComplaints: 25,
+    activeComplaints: activeComplaintsCount,
     activeTrashtrons: 8,
-    recentActivities: [
-      { id: 1, activity: "Complaint #1023 Assigned to Worker John", date: "2024-04-15", status: "Pending" },
-      { id: 2, activity: "Robo Trashtron #5 Started Collection", date: "2024-04-14", status: "Active" },
-      { id: 3, activity: "Worker Emily Completed Task #45", date: "2024-04-13", status: "Completed" },
-    ],
   };
 
   const getBadgeClass = (status) => {
@@ -34,6 +31,8 @@ export default function AdminPage() {
         return "bg-green-500 text-white";
       case "Completed":
         return "bg-blue-500 text-white";
+      case "Accepted": // Add this line
+      return "bg-green-500 text-white"; // Or any other color you prefer
       default:
         return "";
     }
@@ -49,6 +48,31 @@ const handleLogout = async () => {
     console.error('Error logging out: ', error);
   }
 };
+
+// Fetch data from Firestore on component mount
+useEffect(() => {
+  const fetchAcceptedComplaints = async () => {
+    try {
+      const complaintsRef = collection(db, "complaints");
+      const acceptedQuery = query(complaintsRef, where("status", "==", "Accepted"));
+      const querySnapshot = await getDocs(acceptedQuery);
+      const complaintsData = [];
+
+      querySnapshot.forEach((doc) => {
+        const { description, status } = doc.data();
+        complaintsData.push({ id: doc.id, description, status });
+      });
+
+      console.log("Fetched accepted complaints:", complaintsData); // Print data to console
+      setComplaints(complaintsData); // Set state with fetched data
+      setActiveComplaintsCount(complaintsData.length); // Set count of active complaints
+    } catch (error) {
+      console.error("Error fetching accepted complaints:", error);
+    }
+  };
+
+  fetchAcceptedComplaints();
+}, []);
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -131,7 +155,7 @@ const handleLogout = async () => {
               <div className="card-header font-bold text-black">Active Complaints</div>
               <div className="card-body">
                 <h5 className="card-title text-2xl text-gray-700 mb-4">{data.activeComplaints}</h5>
-                <button className="btn text-white bg-blue-500 rounded p-2">
+                <button onClick={() => router.push('/admincomplaints')} className="btn text-white bg-blue-500 rounded p-2">
                   View Details
                 </button>
               </div>
@@ -156,19 +180,18 @@ const handleLogout = async () => {
                   <tr>
                     <th className="border px-4 py-2">#</th>
                     <th className="border px-4 py-2">Activity</th>
-                    <th className="border px-4 py-2">Date</th>
+                    {/* <th className="border px-4 py-2">Date</th> */}
                     <th className="border px-4 py-2">Status</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {data.recentActivities.map((activity) => (
-                    <tr key={activity.id}>
-                      <td className="border px-4 py-2">{activity.id}</td>
-                      <td className="border px-4 py-2">{activity.activity}</td>
-                      <td className="border px-4 py-2">{activity.date}</td>
+                  {complaints.map((complaint, index) => (
+                    <tr key={complaint.id}>
+                      <td className="border px-4 py-2">{index + 1}</td>
+                      <td className="border px-4 py-2">{complaint.description}</td>
                       <td className="border px-4 py-2">
-                        <span className={`px-2 py-1 rounded-lg text-sm ${getBadgeClass(activity.status)}`}>
-                          {activity.status}
+                        <span className={`px-2 py-1 rounded-lg ${getBadgeClass(complaint.status)}`}>
+                          {complaint.status}
                         </span>
                       </td>
                     </tr>

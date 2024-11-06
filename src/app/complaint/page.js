@@ -6,6 +6,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Import F
 import { storage } from '../../lib/firebase'; // Import Firebase storage from your configuration
 import { onAuthStateChanged, signOut } from "firebase/auth"; // Import sign out functionality
 import SignupModal from './SignupModal'; // Import the signup modal component
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
 export default function Registration() {
   const [location, setLocation] = useState("");
@@ -22,6 +23,9 @@ export default function Registration() {
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const [showSuccessMessage, setShowSuccessMessage] = useState(false); // State for success message visibility
   const [logoutSuccessMessage, setLogoutSuccessMessage] = useState(""); // State for logout success message
+  const [complaintStatus, setComplaintStatus] = useState(null); // Store complaint status
+   // Get the current date
+   const date = new Date(); // Current date and time
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -108,6 +112,7 @@ export default function Registration() {
         description,
         location,
         fileURL,
+        date: date.toISOString(), // Store date as ISO string
       });
       console.log("Document written with ID: ", docRef.id);
       //setMessage("Registration successful!"); // Success message
@@ -153,6 +158,7 @@ export default function Registration() {
     }, 3000);
   };
 
+
   return (
     <div className="flex h-screen container mx-auto bg-gradient-to-r from-blue-900 to-blue-400 p-6">
       <div className="grid grid-cols-1 md:grid-cols-3">
@@ -164,7 +170,7 @@ export default function Registration() {
             alt="logo"
             className="mx-auto mt-40 animate-bounce w-1/5 brightness-0 invert mb=0 "
           />
-          <h3 className="text-3xl font-semibold mb-4">Welcome</h3>
+          <h3 className="text-3xl font-semibold mb-4">Welcome User</h3>
           <p>You are 30 seconds away <br />from registering<br /> your complaint!</p>
 
           {/* Notification Message Above Login Button */}
@@ -195,12 +201,23 @@ export default function Registration() {
               Login
             </button>
           ) : (
+            <>
             <button 
               className="mt-10 bg-red-500 text-white font-bold py-2 px-4 rounded-full"
               onClick={handleLogout} // Call logout function
             >
               Logout
             </button>
+
+             {/* Status Button */}
+        <button onClick={() => window.location.href = '/complaintStatus'} className="mt-4 bg-blue-600 text-white font-bold py-2 px-4 rounded-full">
+        Status
+      </button>
+
+      {/* {complaintStatus && (
+        <p className="mt-2 bg-white text-black p-2 rounded-lg">{complaintStatus}</p>
+      )} */}
+      </>
           )}
         </div>
 

@@ -59,13 +59,20 @@ useEffect(() => {
       const complaintsData = [];
 
       querySnapshot.forEach((doc) => {
-        const { description, status } = doc.data();
-        complaintsData.push({ id: doc.id, description, status });
+        const { description, status, date } = doc.data();
+        // Check if 'date' is a Firestore Timestamp and convert it to JS Date
+        const formattedDate = date && date.toDate ? date.toDate() : new Date(date);
+        complaintsData.push({
+          id: doc.id,
+          description,
+          status,
+          date: formattedDate  // store formatted date in complaint object
+        });
       });
 
-      console.log("Fetched accepted complaints:", complaintsData); // Print data to console
-      setComplaints(complaintsData); // Set state with fetched data
-      setActiveComplaintsCount(complaintsData.length); // Set count of active complaints
+      console.log("Fetched accepted complaints:", complaintsData);
+      setComplaints(complaintsData);
+      setActiveComplaintsCount(complaintsData.length);
     } catch (error) {
       console.error("Error fetching accepted complaints:", error);
     }
@@ -73,6 +80,17 @@ useEffect(() => {
 
   fetchAcceptedComplaints();
 }, []);
+
+// Function to format date to DD/MM/YYYY
+const formatDate = (dateString) => {
+  if (!dateString) return "N/A";
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -178,9 +196,9 @@ useEffect(() => {
               <table className="min-w-full bg-white border border-gray-300 shadow-md">
                 <thead className="bg-blue-500 text-white">
                   <tr>
-                    <th className="border px-4 py-2">#</th>
+                    <th className="border px-4 py-2">SI No</th>
                     <th className="border px-4 py-2">Activity</th>
-                    {/* <th className="border px-4 py-2">Date</th> */}
+                    <th className="border px-4 py-2">Date</th>
                     <th className="border px-4 py-2">Status</th>
                   </tr>
                 </thead>
@@ -189,6 +207,10 @@ useEffect(() => {
                     <tr key={complaint.id}>
                       <td className="border px-4 py-2">{index + 1}</td>
                       <td className="border px-4 py-2">{complaint.description}</td>
+                      <td className="border px-4 py-2">
+                        {/* Format the date here */}
+                        {formatDate(complaint.date)}
+                      </td>
                       <td className="border px-4 py-2">
                         <span className={`px-2 py-1 rounded-lg ${getBadgeClass(complaint.status)}`}>
                           {complaint.status}

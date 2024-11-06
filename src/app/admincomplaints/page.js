@@ -2,11 +2,18 @@
 import { useState, useEffect } from "react";
 import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { FaCheckCircle, FaTimesCircle, FaClock } from "react-icons/fa";
+import { FaCheckCircle, FaTimesCircle, FaClock, FaHome, FaSignOutAlt, FaFileAlt } from "react-icons/fa";
+import { useRouter } from 'next/navigation';
+import { signOut } from 'firebase/auth'; // Import signOut method
+import { auth } from '@/lib/firebase';
 
 export default function AdminComplaints() {
+
+  const router = useRouter(); // Initialize router here
+
   const [complaints, setComplaints] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [selectedComplaint, setSelectedComplaint] = useState(null); // Store the selected complaint
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
   const [showRejectionBox, setShowRejectionBox] = useState(false);
@@ -32,11 +39,12 @@ export default function AdminComplaints() {
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) =>
-      prevIndex - 3 < 0 ? complaints.length - 3 : prevIndex - 3
+      prevIndex - 3 < 0 ? complaints.length - (complaints.length % 3 || 3) : prevIndex - 3
     );
   };
 
-  const openSidebar = () => {
+  const openSidebar = (complaint) => {
+    setSelectedComplaint(complaint); // Set the clicked complaint as selected
     setIsSidebarOpen(true);
     setShowRejectionBox(false);
     setRejectionReason("");
@@ -84,25 +92,45 @@ export default function AdminComplaints() {
 
   const totalPages = Math.ceil(complaints.length / 3);
 
+  // Add a logout function
+const handleLogout = async () => {
+  try {
+    await signOut(auth);
+    alert('Logged out successfully!');
+    router.push('/login'); // Navigate to login page
+  } catch (error) {
+    console.error('Error logging out: ', error);
+  }
+};
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center relative">
+    {/* Sidebar */}
+    <div
+      className="fixed left-0 top-0 h-full bg-gray-900 text-white flex flex-col items-center py-6"
+      style={{ width: "60px" }}
+    >
+    <FaHome size={24} className="mb-8 cursor-pointer" title="Home" onClick={() => window.location.href = '/admin'}/>
+    <FaFileAlt size={24} className="mb-8 cursor-pointer" title="Reports" />
+    <FaSignOutAlt size={24} className="cursor-pointer" title="Logout" onClick={handleLogout}/>
+    </div>
       {/* Complaint Card Slider */}
       <div className="relative w-full max-w-5xl overflow-hidden">
         <div
           className="flex transition-transform duration-700 ease-in-out"
           style={{
-            transform: `translateX(-${(currentIndex / 3) * (100 / 3)}%)`,
+            transform: `translateX(-${(currentIndex / 3) * 100}%)`,
             willChange: "transform",
           }}
         >
           {complaints.map((complaint, index) => (
             <div
               key={complaint.id}
-              className="flex-shrink-0 w-80 h-60 p-4 rounded-xl shadow-lg transition-transform duration-500 transform mx-2 hover:scale-105"
+              className="flex-shrink-0 h-80 w-60 p-4 rounded-xl shadow-lg transition-transform duration-500 transform mx-2 hover:scale-110 overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, #6366f1, #f43f5e)",
+                background: "linear-gradient(135deg, #055563, #174889)",
               }}
-              onClick={openSidebar}
+              onClick={() => openSidebar(complaint)}
             >
               <div className="flex items-center justify-between mb-2">
                 <h2 className="text-lg font-bold text-white">
@@ -114,7 +142,7 @@ export default function AdminComplaints() {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  openSidebar();
+                  openSidebar(complaint); // Pass the complaint to openSidebar
                 }}
                 className="mt-8 bg-white text-purple-600 px-4 py-1 rounded-full shadow-md hover:bg-purple-100 transition-all"
               >
@@ -166,23 +194,23 @@ export default function AdminComplaints() {
             &times;
           </button>
         </div>
-        {complaints.length > 0 && (
+        {selectedComplaint && (
           <div className="p-4 text-black">
             <h3 className="text-2xl font-bold mb-2">
-              {complaints[currentIndex]?.firstName} {complaints[currentIndex]?.lastName}
+              {selectedComplaint.firstName} {selectedComplaint.lastName}
             </h3>
             <p className="mb-2">
-              <strong>Email:</strong> {complaints[currentIndex]?.email}
+              <strong>Email:</strong> {selectedComplaint.email}
             </p>
             <p className="mb-2">
-              <strong>Description:</strong> {complaints[currentIndex]?.description}
+              <strong>Description:</strong> {selectedComplaint.description}
             </p>
             <p className="mb-2">
-              <strong>Location:</strong> {complaints[currentIndex]?.location}
+              <strong>Location:</strong> {selectedComplaint.location}
             </p>
-            {complaints[currentIndex]?.fileURL && (
+            {selectedComplaint.fileURL && (
               <a
-                href={complaints[currentIndex].fileURL}
+                href={selectedComplaint.fileURL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block mt-4 text-blue-500 underline"
@@ -201,10 +229,10 @@ export default function AdminComplaints() {
               ></textarea>
             )}
 
-            {/* complaint Accept and Reject Buttons */}
+            {/* Complaint Accept and Reject Buttons */}
             <div className="mt-4 flex justify-between">
               <button
-                onClick={() => handleAccept(complaints[currentIndex].id)}
+                onClick={() => handleAccept(selectedComplaint.id)}
                 className="flex items-center justify-center bg-gradient-to-r from-green-400 to-green-600 hover:scale-105 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition duration-300"
               >
                 <FaCheckCircle className="mr-2" />
@@ -222,7 +250,7 @@ export default function AdminComplaints() {
             {/* Finalize Rejection Button */}
             {showRejectionBox && (
               <button
-                onClick={() => handleReject(complaints[currentIndex].id)}
+                onClick={() => handleReject(selectedComplaint.id)}
                 className="mt-4 w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg transition duration-300"
               >
                 Submit Rejection

@@ -126,9 +126,9 @@ const handleLogout = async () => {
           {complaints.map((complaint, index) => (
             <div
               key={complaint.id}
-              className="flex-shrink-0 w-80 h-60 p-4 rounded-xl shadow-lg transition-transform duration-500 transform mx-2 hover:scale-105"
+              className="flex-shrink-0 h-80 w-60 p-4 rounded-xl shadow-lg transition-transform duration-500 transform mx-2 hover:scale-110 overflow-hidden"
               style={{
-                background: "linear-gradient(135deg, #6366f1, #f43f5e)",
+                background: "linear-gradient(135deg, #055563, #174889)",
               }}
               onClick={() => openSidebar(complaint)}
             >

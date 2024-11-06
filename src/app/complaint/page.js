@@ -1,12 +1,12 @@
 'use client';
 import { useState, useEffect } from "react";
 import { db, auth, googleProvider } from '../../lib/firebase'; // Import your firebase configuration
-import { collection, addDoc, doc, getDoc } from "firebase/firestore";
+// import { collection, addDoc, doc, getDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage"; // Import Firebase Storage
 import { storage } from '../../lib/firebase'; // Import Firebase storage from your configuration
 import { onAuthStateChanged, signOut } from "firebase/auth"; // Import sign out functionality
 import SignupModal from './SignupModal'; // Import the signup modal component
-import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
+import { collection, addDoc, doc, query, where, getDoc } from "firebase/firestore";
 
 export default function Registration() {
   const [location, setLocation] = useState("");

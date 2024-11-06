@@ -88,9 +88,15 @@ export default function ComplaintStatus() {
                   View File
                 </a>
               </p>
-              <p className={`font-semibold ${complaint.status === 'Rejected' ? 'text-red-600' : complaint.status === 'Pending' ? 'text-yellow-600' : 'text-green-600'}`}>
+              <p className={`font-semibold ${
+                complaint.status === 'Rejected' ? 'text-red-600' :
+                complaint.status === 'Pending' ? 'text-yellow-600' :
+                complaint.status === 'Accepted' ? 'text-green-600' :
+                'text-yellow-600'  // Default color if status is undefined or unhandled
+                }`}>
                 <strong>Status:</strong> {complaint.status || "Pending"}
               </p>
+
               {complaint.status === 'Rejected' && complaint.rejectionReason && (
                 <p className="text-red-600"><strong>Rejection Reason:</strong> {complaint.rejectionReason}</p>
               )}

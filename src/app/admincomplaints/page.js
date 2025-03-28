@@ -7,6 +7,15 @@ import { useRouter } from 'next/navigation';
 import { signOut } from 'firebase/auth'; // Import signOut method
 import { auth } from '@/lib/firebase';
 
+import dynamic from 'next/dynamic';
+import "leaflet/dist/leaflet.css";
+
+// Dynamically import react-leaflet components to prevent SSR issues
+const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
+const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
+const Marker = dynamic(() => import('react-leaflet').then(mod => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then(mod => mod.Popup), { ssr: false });
+
 export default function AdminComplaints() {
 
   const router = useRouter(); // Initialize router here
@@ -44,7 +53,20 @@ export default function AdminComplaints() {
   };
 
   const openSidebar = (complaint) => {
-    setSelectedComplaint(complaint); // Set the clicked complaint as selected
+    // Extract latitude and longitude from the stored string
+  const locationString = complaint.location; // Example: "Latitude: 10.104541, Longitude: 76.4158129"
+  const [lat, lng] = locationString
+    .replace("Latitude: ", "")
+    .replace("Longitude: ", "")
+    .split(", ")
+    .map(Number); // Convert to numbers
+
+  setSelectedComplaint({
+    ...complaint,
+    latitude: lat,
+    longitude: lng,
+  });
+
     setIsSidebarOpen(true);
     setShowRejectionBox(false);
     setRejectionReason("");
@@ -114,6 +136,7 @@ const handleLogout = async () => {
     <FaFileAlt size={24} className="mb-8 cursor-pointer" title="Reports" />
     <FaSignOutAlt size={24} className="cursor-pointer" title="Logout" onClick={handleLogout}/>
     </div>
+
       {/* Complaint Card Slider */}
       <div className="relative w-full max-w-5xl overflow-hidden">
         <div
@@ -205,9 +228,22 @@ const handleLogout = async () => {
             <p className="mb-2">
               <strong>Description:</strong> {selectedComplaint.description}
             </p>
-            <p className="mb-2">
-              <strong>Location:</strong> {selectedComplaint.location}
-            </p>
+            
+            {/* Map Display for Complaint Location */}
+            <p className="mb-2"><strong>Location:</strong></p>
+            {/* Google Maps Link */}
+              {selectedComplaint.latitude && selectedComplaint.longitude && (
+                <a
+                  href={`https://www.google.com/maps?q=${selectedComplaint.latitude},${selectedComplaint.longitude}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block mt-4 bg-blue-500 text-white text-center py-2 rounded-lg shadow-md hover:bg-blue-600 transition-all"
+                >
+                  View in Google Maps
+                </a>
+              )}
+
+
             {selectedComplaint.fileURL && (
               <a
                 href={selectedComplaint.fileURL}
